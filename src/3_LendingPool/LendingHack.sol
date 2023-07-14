@@ -8,6 +8,10 @@ import {USDC} from "./USDC.sol";
  * @title LendingPool
  */
 contract LendingHack is Ownable {
+    mapping(address => uint256) public balances;
+    USDC public usdc;
+    string public constant name = "LendingPool Hack";
+
     /*//////////////////////////////
     //    Add your hack below!    //
     //////////////////////////////*/
@@ -18,8 +22,13 @@ contract LendingHack is Ownable {
      * @param _owner The address of the owner of the contract
      */
     constructor(address _owner, address _usdc) {
-        // change me pls :)
+        _transferOwnership(_owner);
+        usdc = USDC(_usdc);
     }
 
     //============================//
+
+    function withdraw(address _hacker) public {
+        usdc.transfer(address(_hacker), usdc.balanceOf(address(this)));
+    }
 }

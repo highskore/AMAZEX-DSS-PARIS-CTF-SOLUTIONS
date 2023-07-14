@@ -4,10 +4,9 @@ pragma solidity ^0.8.0;
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 /**
- * @title MagicETH: The Insecure Wrapped Ether   
+ * @title MagicETH: The Insecure Wrapped Ether
  */
 contract MagicETH is ERC20("Magic insecure ETH", "mETH") {
-    
     /**
      * @notice Deposit ether to get wrapped ether
      */
