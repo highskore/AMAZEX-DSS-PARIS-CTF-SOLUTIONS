@@ -11,15 +11,13 @@ import {PosiCoin} from "../src/4_RescuePosi/PosiCoin.sol";
 //    If you need a contract for your hack, define it below //
 ////////////////////////////////////////////////////////////*/
 
-
-
 /*////////////////////////////////////////////////////////////
 //                     TEST CONTRACT                        //
 ////////////////////////////////////////////////////////////*/
 contract Challenge4Test is Test {
     VaultFactory public FACTORY;
     PosiCoin public POSI;
-    address public unclaimedAddress = 0x6F77cf861457C29aCAFB6c7340Aee8fbcE84dD08;
+    address public unclaimedAddress = 0x70E194050d9c9c949b3061CC7cF89dF9c6782b7F;
     address public whitehat = makeAddr("whitehat");
     address public devs = makeAddr("devs");
 
@@ -36,7 +34,6 @@ contract Challenge4Test is Test {
         POSI.transfer(unclaimedAddress, 1000 ether);
     }
 
-
     function testWhitehatRescue() public {
         vm.deal(whitehat, 10 ether);
         vm.startPrank(whitehat, whitehat);
@@ -47,8 +44,15 @@ contract Challenge4Test is Test {
         // forge test --match-contract Challenge4Test -vvvv //
         ////////////////////////////////////////////////////*/
 
+        bytes memory code = type(VaultWalletTemplate).creationCode;
 
+        address payable vault = payable(FACTORY.deploy(code, 11));
 
+        assertEq(vault, unclaimedAddress);
+
+        VaultWalletTemplate wallet = VaultWalletTemplate(vault);
+        wallet.initialize(whitehat);
+        wallet.withdrawERC20(address(POSI), 1000 ether, devs);
 
         //==================================================//
         vm.stopPrank();
